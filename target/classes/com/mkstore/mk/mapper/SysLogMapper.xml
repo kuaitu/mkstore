@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mkstore.mk.dao.SysLogMapper" >
+  <resultMap id="BaseResultMap" type="com.mkstore.mk.model.SysLog" >
+    <id column="log_id" property="logId" jdbcType="INTEGER" />
+    <result column="opt_user_id" property="optUserId" jdbcType="INTEGER" />
+    <result column="opt_user_name" property="optUserName" jdbcType="VARCHAR" />
+    <result column="opt_type" property="optType" jdbcType="VARCHAR" />
+    <result column="opt_table" property="optTable" jdbcType="VARCHAR" />
+    <result column="opt_time" property="optTime" jdbcType="TIMESTAMP" />
+    <result column="opt_pri_key" property="optPriKey" jdbcType="VARCHAR" />
+    <result column="opt_tag" property="optTag" jdbcType="VARCHAR" />
+    <result column="opt_content" property="optContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    sys_log.log_id, sys_log.opt_user_id, sys_log.opt_user_name, sys_log.opt_type, sys_log.opt_table, sys_log.opt_time, sys_log.opt_pri_key, sys_log.opt_tag
+    ,sys_log.opt_content
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mkstore.mk.model.SysLogExample" >
+    <!--
+    sql dialect: MySql
+    -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_log
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      LIMIT
+      <if test="offset != null" >
+        ${offset},
+      </if>
+      ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mkstore.mk.model.SysLogExample" >
+    delete from sys_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mkstore.mk.model.SysLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="logId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_log (opt_user_id, opt_user_name, opt_type, 
+      opt_table, opt_time, opt_pri_key, 
+      opt_tag, opt_content)
+    values (#{optUserId,jdbcType=INTEGER}, #{optUserName,jdbcType=VARCHAR}, #{optType,jdbcType=VARCHAR}, 
+      #{optTable,jdbcType=VARCHAR}, #{optTime,jdbcType=TIMESTAMP}, #{optPriKey,jdbcType=VARCHAR}, 
+      #{optTag,jdbcType=VARCHAR}, #{optContent,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mkstore.mk.model.SysLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="logId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="optUserId != null" >
+        opt_user_id,
+      </if>
+      <if test="optUserName != null" >
+        opt_user_name,
+      </if>
+      <if test="optType != null" >
+        opt_type,
+      </if>
+      <if test="optTable != null" >
+        opt_table,
+      </if>
+      <if test="optTime != null" >
+        opt_time,
+      </if>
+      <if test="optPriKey != null" >
+        opt_pri_key,
+      </if>
+      <if test="optTag != null" >
+        opt_tag,
+      </if>
+      <if test="optContent != null" >
+        opt_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="optUserId != null" >
+        #{optUserId,jdbcType=INTEGER},
+      </if>
+      <if test="optUserName != null" >
+        #{optUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="optType != null" >
+        #{optType,jdbcType=VARCHAR},
+      </if>
+      <if test="optTable != null" >
+        #{optTable,jdbcType=VARCHAR},
+      </if>
+      <if test="optTime != null" >
+        #{optTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="optPriKey != null" >
+        #{optPriKey,jdbcType=VARCHAR},
+      </if>
+      <if test="optTag != null" >
+        #{optTag,jdbcType=VARCHAR},
+      </if>
+      <if test="optContent != null" >
+        #{optContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mkstore.mk.model.SysLogExample" resultType="java.lang.Integer" >
+    select count(*) from sys_log
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_log
+    <set >
+      <if test="record.logId != null" >
+        log_id = #{record.logId,jdbcType=INTEGER},
+      </if>
+      <if test="record.optUserId != null" >
+        opt_user_id = #{record.optUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.optUserName != null" >
+        opt_user_name = #{record.optUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optType != null" >
+        opt_type = #{record.optType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optTable != null" >
+        opt_table = #{record.optTable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optTime != null" >
+        opt_time = #{record.optTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.optPriKey != null" >
+        opt_pri_key = #{record.optPriKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optTag != null" >
+        opt_tag = #{record.optTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optContent != null" >
+        opt_content = #{record.optContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_log
+    set log_id = #{record.logId,jdbcType=INTEGER},
+      opt_user_id = #{record.optUserId,jdbcType=INTEGER},
+      opt_user_name = #{record.optUserName,jdbcType=VARCHAR},
+      opt_type = #{record.optType,jdbcType=VARCHAR},
+      opt_table = #{record.optTable,jdbcType=VARCHAR},
+      opt_time = #{record.optTime,jdbcType=TIMESTAMP},
+      opt_pri_key = #{record.optPriKey,jdbcType=VARCHAR},
+      opt_tag = #{record.optTag,jdbcType=VARCHAR},
+      opt_content = #{record.optContent,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mkstore.mk.model.SysLog" >
+    update sys_log
+    <set >
+      <if test="optUserId != null" >
+        opt_user_id = #{optUserId,jdbcType=INTEGER},
+      </if>
+      <if test="optUserName != null" >
+        opt_user_name = #{optUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="optType != null" >
+        opt_type = #{optType,jdbcType=VARCHAR},
+      </if>
+      <if test="optTable != null" >
+        opt_table = #{optTable,jdbcType=VARCHAR},
+      </if>
+      <if test="optTime != null" >
+        opt_time = #{optTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="optPriKey != null" >
+        opt_pri_key = #{optPriKey,jdbcType=VARCHAR},
+      </if>
+      <if test="optTag != null" >
+        opt_tag = #{optTag,jdbcType=VARCHAR},
+      </if>
+      <if test="optContent != null" >
+        opt_content = #{optContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mkstore.mk.model.SysLog" >
+    update sys_log
+    set opt_user_id = #{optUserId,jdbcType=INTEGER},
+      opt_user_name = #{optUserName,jdbcType=VARCHAR},
+      opt_type = #{optType,jdbcType=VARCHAR},
+      opt_table = #{optTable,jdbcType=VARCHAR},
+      opt_time = #{optTime,jdbcType=TIMESTAMP},
+      opt_pri_key = #{optPriKey,jdbcType=VARCHAR},
+      opt_tag = #{optTag,jdbcType=VARCHAR},
+      opt_content = #{optContent,jdbcType=VARCHAR}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+</mapper>

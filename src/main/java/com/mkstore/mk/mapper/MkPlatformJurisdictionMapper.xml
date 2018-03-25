@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mkstore.mk.dao.MkPlatformJurisdictionMapper" >
+  <resultMap id="BaseResultMap" type="com.mkstore.mk.model.MkPlatformJurisdiction" >
+    <id column="platform_jurisdiction_id" property="platformJurisdictionId" jdbcType="INTEGER" />
+    <result column="menu_id" property="menuId" jdbcType="INTEGER" />
+    <result column="jurisdiction_name" property="jurisdictionName" jdbcType="VARCHAR" />
+    <result column="jurisdiction_url" property="jurisdictionUrl" jdbcType="VARCHAR" />
+    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mk_platform_jurisdiction.platform_jurisdiction_id, mk_platform_jurisdiction.menu_id, mk_platform_jurisdiction.jurisdiction_name, mk_platform_jurisdiction.jurisdiction_url, mk_platform_jurisdiction.item_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mkstore.mk.model.MkPlatformJurisdictionExample" >
+    <!--
+    sql dialect: MySql
+    -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mk_platform_jurisdiction
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      LIMIT
+      <if test="offset != null" >
+        ${offset},
+      </if>
+      ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mk_platform_jurisdiction
+    where platform_jurisdiction_id = #{platformJurisdictionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mk_platform_jurisdiction
+    where platform_jurisdiction_id = #{platformJurisdictionId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mkstore.mk.model.MkPlatformJurisdictionExample" >
+    delete from mk_platform_jurisdiction
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mkstore.mk.model.MkPlatformJurisdiction" >
+    <selectKey resultType="java.lang.Integer" keyProperty="platformJurisdictionId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_jurisdiction (menu_id, jurisdiction_name, jurisdiction_url, 
+      item_id)
+    values (#{menuId,jdbcType=INTEGER}, #{jurisdictionName,jdbcType=VARCHAR}, #{jurisdictionUrl,jdbcType=VARCHAR}, 
+      #{itemId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mkstore.mk.model.MkPlatformJurisdiction" >
+    <selectKey resultType="java.lang.Integer" keyProperty="platformJurisdictionId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_jurisdiction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuId != null" >
+        menu_id,
+      </if>
+      <if test="jurisdictionName != null" >
+        jurisdiction_name,
+      </if>
+      <if test="jurisdictionUrl != null" >
+        jurisdiction_url,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuId != null" >
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="jurisdictionName != null" >
+        #{jurisdictionName,jdbcType=VARCHAR},
+      </if>
+      <if test="jurisdictionUrl != null" >
+        #{jurisdictionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mkstore.mk.model.MkPlatformJurisdictionExample" resultType="java.lang.Integer" >
+    select count(*) from mk_platform_jurisdiction
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update mk_platform_jurisdiction
+    <set >
+      <if test="record.platformJurisdictionId != null" >
+        platform_jurisdiction_id = #{record.platformJurisdictionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.menuId != null" >
+        menu_id = #{record.menuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.jurisdictionName != null" >
+        jurisdiction_name = #{record.jurisdictionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jurisdictionUrl != null" >
+        jurisdiction_url = #{record.jurisdictionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.itemId != null" >
+        item_id = #{record.itemId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update mk_platform_jurisdiction
+    set platform_jurisdiction_id = #{record.platformJurisdictionId,jdbcType=INTEGER},
+      menu_id = #{record.menuId,jdbcType=INTEGER},
+      jurisdiction_name = #{record.jurisdictionName,jdbcType=VARCHAR},
+      jurisdiction_url = #{record.jurisdictionUrl,jdbcType=VARCHAR},
+      item_id = #{record.itemId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mkstore.mk.model.MkPlatformJurisdiction" >
+    update mk_platform_jurisdiction
+    <set >
+      <if test="menuId != null" >
+        menu_id = #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="jurisdictionName != null" >
+        jurisdiction_name = #{jurisdictionName,jdbcType=VARCHAR},
+      </if>
+      <if test="jurisdictionUrl != null" >
+        jurisdiction_url = #{jurisdictionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where platform_jurisdiction_id = #{platformJurisdictionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mkstore.mk.model.MkPlatformJurisdiction" >
+    update mk_platform_jurisdiction
+    set menu_id = #{menuId,jdbcType=INTEGER},
+      jurisdiction_name = #{jurisdictionName,jdbcType=VARCHAR},
+      jurisdiction_url = #{jurisdictionUrl,jdbcType=VARCHAR},
+      item_id = #{itemId,jdbcType=VARCHAR}
+    where platform_jurisdiction_id = #{platformJurisdictionId,jdbcType=INTEGER}
+  </update>
+</mapper>

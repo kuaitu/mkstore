@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mkstore.mk.dao.MkPlatformMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.mkstore.mk.model.MkPlatformMenu" >
+    <id column="platform_menu_id" property="platformMenuId" jdbcType="INTEGER" />
+    <result column="parent_platform_menu_id" property="parentPlatformMenuId" jdbcType="INTEGER" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="menu_url" property="menuUrl" jdbcType="VARCHAR" />
+    <result column="menu_grade" property="menuGrade" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mk_platform_menu.platform_menu_id, mk_platform_menu.parent_platform_menu_id, mk_platform_menu.menu_name, mk_platform_menu.menu_url, mk_platform_menu.menu_grade
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mkstore.mk.model.MkPlatformMenuExample" >
+    <!--
+    sql dialect: MySql
+    -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mk_platform_menu
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      LIMIT
+      <if test="offset != null" >
+        ${offset},
+      </if>
+      ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mk_platform_menu
+    where platform_menu_id = #{platformMenuId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mk_platform_menu
+    where platform_menu_id = #{platformMenuId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mkstore.mk.model.MkPlatformMenuExample" >
+    delete from mk_platform_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mkstore.mk.model.MkPlatformMenu" >
+    <selectKey resultType="java.lang.Integer" keyProperty="platformMenuId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_menu (parent_platform_menu_id, menu_name, menu_url, 
+      menu_grade)
+    values (#{parentPlatformMenuId,jdbcType=INTEGER}, #{menuName,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, 
+      #{menuGrade,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mkstore.mk.model.MkPlatformMenu" >
+    <selectKey resultType="java.lang.Integer" keyProperty="platformMenuId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="parentPlatformMenuId != null" >
+        parent_platform_menu_id,
+      </if>
+      <if test="menuName != null" >
+        menu_name,
+      </if>
+      <if test="menuUrl != null" >
+        menu_url,
+      </if>
+      <if test="menuGrade != null" >
+        menu_grade,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="parentPlatformMenuId != null" >
+        #{parentPlatformMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuUrl != null" >
+        #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuGrade != null" >
+        #{menuGrade,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mkstore.mk.model.MkPlatformMenuExample" resultType="java.lang.Integer" >
+    select count(*) from mk_platform_menu
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update mk_platform_menu
+    <set >
+      <if test="record.platformMenuId != null" >
+        platform_menu_id = #{record.platformMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.parentPlatformMenuId != null" >
+        parent_platform_menu_id = #{record.parentPlatformMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.menuName != null" >
+        menu_name = #{record.menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuUrl != null" >
+        menu_url = #{record.menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuGrade != null" >
+        menu_grade = #{record.menuGrade,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update mk_platform_menu
+    set platform_menu_id = #{record.platformMenuId,jdbcType=INTEGER},
+      parent_platform_menu_id = #{record.parentPlatformMenuId,jdbcType=INTEGER},
+      menu_name = #{record.menuName,jdbcType=VARCHAR},
+      menu_url = #{record.menuUrl,jdbcType=VARCHAR},
+      menu_grade = #{record.menuGrade,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mkstore.mk.model.MkPlatformMenu" >
+    update mk_platform_menu
+    <set >
+      <if test="parentPlatformMenuId != null" >
+        parent_platform_menu_id = #{parentPlatformMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="menuName != null" >
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuUrl != null" >
+        menu_url = #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuGrade != null" >
+        menu_grade = #{menuGrade,jdbcType=CHAR},
+      </if>
+    </set>
+    where platform_menu_id = #{platformMenuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mkstore.mk.model.MkPlatformMenu" >
+    update mk_platform_menu
+    set parent_platform_menu_id = #{parentPlatformMenuId,jdbcType=INTEGER},
+      menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_url = #{menuUrl,jdbcType=VARCHAR},
+      menu_grade = #{menuGrade,jdbcType=CHAR}
+    where platform_menu_id = #{platformMenuId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mkstore.mk.dao.PlatformUserMapper" >
+  <resultMap id="BaseResultMap" type="com.mkstore.mk.model.PlatformUser" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="user_password" property="userPassword" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="cell_phone_no" property="cellPhoneNo" jdbcType="VARCHAR" />
+    <result column="e_mail" property="eMail" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="login_num" property="loginNum" jdbcType="INTEGER" />
+    <result column="is_admin" property="isAdmin" jdbcType="CHAR" />
+    <result column="login_error_num" property="loginErrorNum" jdbcType="INTEGER" />
+    <result column="lock_time" property="lockTime" jdbcType="TIMESTAMP" />
+    <result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
+    <result column="user_img" property="userImg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mk_platform_user.user_id, mk_platform_user.user_name, mk_platform_user.real_name, mk_platform_user.user_password, mk_platform_user.salt, mk_platform_user.cell_phone_no, mk_platform_user.e_mail, mk_platform_user.user_status
+    ,mk_platform_user.create_time, mk_platform_user.login_num, mk_platform_user.is_admin, mk_platform_user.login_error_num, mk_platform_user.lock_time, mk_platform_user.account_status, mk_platform_user.user_img
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mkstore.mk.model.PlatformUserExample" >
+    <!--
+    sql dialect: MySql
+    -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mk_platform_user
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      LIMIT
+      <if test="offset != null" >
+        ${offset},
+      </if>
+      ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mk_platform_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mk_platform_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mkstore.mk.model.PlatformUserExample" >
+    delete from mk_platform_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mkstore.mk.model.PlatformUser" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_user (user_name, real_name, user_password, 
+      salt, cell_phone_no, e_mail, 
+      user_status, create_time, login_num, 
+      is_admin, login_error_num, lock_time, 
+      account_status, user_img)
+    values (#{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{cellPhoneNo,jdbcType=VARCHAR}, #{eMail,jdbcType=VARCHAR}, 
+      #{userStatus,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{loginNum,jdbcType=INTEGER}, 
+      #{isAdmin,jdbcType=CHAR}, #{loginErrorNum,jdbcType=INTEGER}, #{lockTime,jdbcType=TIMESTAMP}, 
+      #{accountStatus,jdbcType=VARCHAR}, #{userImg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mkstore.mk.model.PlatformUser" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="userPassword != null" >
+        user_password,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="cellPhoneNo != null" >
+        cell_phone_no,
+      </if>
+      <if test="eMail != null" >
+        e_mail,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="loginNum != null" >
+        login_num,
+      </if>
+      <if test="isAdmin != null" >
+        is_admin,
+      </if>
+      <if test="loginErrorNum != null" >
+        login_error_num,
+      </if>
+      <if test="lockTime != null" >
+        lock_time,
+      </if>
+      <if test="accountStatus != null" >
+        account_status,
+      </if>
+      <if test="userImg != null" >
+        user_img,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="cellPhoneNo != null" >
+        #{cellPhoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="eMail != null" >
+        #{eMail,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginNum != null" >
+        #{loginNum,jdbcType=INTEGER},
+      </if>
+      <if test="isAdmin != null" >
+        #{isAdmin,jdbcType=CHAR},
+      </if>
+      <if test="loginErrorNum != null" >
+        #{loginErrorNum,jdbcType=INTEGER},
+      </if>
+      <if test="lockTime != null" >
+        #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountStatus != null" >
+        #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="userImg != null" >
+        #{userImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mkstore.mk.model.PlatformUserExample" resultType="java.lang.Integer" >
+    select count(*) from mk_platform_user
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update mk_platform_user
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realName != null" >
+        real_name = #{record.realName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPassword != null" >
+        user_password = #{record.userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.salt != null" >
+        salt = #{record.salt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cellPhoneNo != null" >
+        cell_phone_no = #{record.cellPhoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eMail != null" >
+        e_mail = #{record.eMail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userStatus != null" >
+        user_status = #{record.userStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.loginNum != null" >
+        login_num = #{record.loginNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.isAdmin != null" >
+        is_admin = #{record.isAdmin,jdbcType=CHAR},
+      </if>
+      <if test="record.loginErrorNum != null" >
+        login_error_num = #{record.loginErrorNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.lockTime != null" >
+        lock_time = #{record.lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.accountStatus != null" >
+        account_status = #{record.accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userImg != null" >
+        user_img = #{record.userImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update mk_platform_user
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      real_name = #{record.realName,jdbcType=VARCHAR},
+      user_password = #{record.userPassword,jdbcType=VARCHAR},
+      salt = #{record.salt,jdbcType=VARCHAR},
+      cell_phone_no = #{record.cellPhoneNo,jdbcType=VARCHAR},
+      e_mail = #{record.eMail,jdbcType=VARCHAR},
+      user_status = #{record.userStatus,jdbcType=CHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      login_num = #{record.loginNum,jdbcType=INTEGER},
+      is_admin = #{record.isAdmin,jdbcType=CHAR},
+      login_error_num = #{record.loginErrorNum,jdbcType=INTEGER},
+      lock_time = #{record.lockTime,jdbcType=TIMESTAMP},
+      account_status = #{record.accountStatus,jdbcType=VARCHAR},
+      user_img = #{record.userImg,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mkstore.mk.model.PlatformUser" >
+    update mk_platform_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="cellPhoneNo != null" >
+        cell_phone_no = #{cellPhoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="eMail != null" >
+        e_mail = #{eMail,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginNum != null" >
+        login_num = #{loginNum,jdbcType=INTEGER},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin,jdbcType=CHAR},
+      </if>
+      <if test="loginErrorNum != null" >
+        login_error_num = #{loginErrorNum,jdbcType=INTEGER},
+      </if>
+      <if test="lockTime != null" >
+        lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountStatus != null" >
+        account_status = #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="userImg != null" >
+        user_img = #{userImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mkstore.mk.model.PlatformUser" >
+    update mk_platform_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      user_password = #{userPassword,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      cell_phone_no = #{cellPhoneNo,jdbcType=VARCHAR},
+      e_mail = #{eMail,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      login_num = #{loginNum,jdbcType=INTEGER},
+      is_admin = #{isAdmin,jdbcType=CHAR},
+      login_error_num = #{loginErrorNum,jdbcType=INTEGER},
+      lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      account_status = #{accountStatus,jdbcType=VARCHAR},
+      user_img = #{userImg,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

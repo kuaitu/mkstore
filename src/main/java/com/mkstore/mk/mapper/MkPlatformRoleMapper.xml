@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mkstore.mk.dao.MkPlatformRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.mkstore.mk.model.MkPlatformRole" >
+    <id column="platform_role_id" property="platformRoleId" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_describe" property="roleDescribe" jdbcType="VARCHAR" />
+    <result column="role_status" property="roleStatus" jdbcType="CHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="is_admin" property="isAdmin" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.rightValue" >
+                  and ${criterion.beforeValue}#{criterion.value}${criterion.afterValue} ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} ${criterion.beforeValue}#{criterion.value}${criterion.afterValue}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mk_platform_role.platform_role_id, mk_platform_role.role_name, mk_platform_role.role_describe, mk_platform_role.role_status, mk_platform_role.add_time, mk_platform_role.is_admin
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mkstore.mk.model.MkPlatformRoleExample" >
+    <!--
+    sql dialect: MySql
+    -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mk_platform_role
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      LIMIT
+      <if test="offset != null" >
+        ${offset},
+      </if>
+      ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mk_platform_role
+    where platform_role_id = #{platformRoleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mk_platform_role
+    where platform_role_id = #{platformRoleId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mkstore.mk.model.MkPlatformRoleExample" >
+    delete from mk_platform_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mkstore.mk.model.MkPlatformRole" >
+    <selectKey resultType="java.lang.Integer" keyProperty="platformRoleId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_role (role_name, role_describe, role_status, 
+      add_time, is_admin)
+    values (#{roleName,jdbcType=VARCHAR}, #{roleDescribe,jdbcType=VARCHAR}, #{roleStatus,jdbcType=CHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{isAdmin,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mkstore.mk.model.MkPlatformRole" >
+    <selectKey resultType="java.lang.Integer" keyProperty="platformRoleId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mk_platform_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleDescribe != null" >
+        role_describe,
+      </if>
+      <if test="roleStatus != null" >
+        role_status,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="isAdmin != null" >
+        is_admin,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDescribe != null" >
+        #{roleDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="roleStatus != null" >
+        #{roleStatus,jdbcType=CHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAdmin != null" >
+        #{isAdmin,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mkstore.mk.model.MkPlatformRoleExample" resultType="java.lang.Integer" >
+    select count(*) from mk_platform_role
+    <if test="from != null" >
+      <foreach collection="from" item="join" separator=" " >
+        ${join}
+      </foreach>
+    </if>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update mk_platform_role
+    <set >
+      <if test="record.platformRoleId != null" >
+        platform_role_id = #{record.platformRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.roleName != null" >
+        role_name = #{record.roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roleDescribe != null" >
+        role_describe = #{record.roleDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roleStatus != null" >
+        role_status = #{record.roleStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isAdmin != null" >
+        is_admin = #{record.isAdmin,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update mk_platform_role
+    set platform_role_id = #{record.platformRoleId,jdbcType=INTEGER},
+      role_name = #{record.roleName,jdbcType=VARCHAR},
+      role_describe = #{record.roleDescribe,jdbcType=VARCHAR},
+      role_status = #{record.roleStatus,jdbcType=CHAR},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      is_admin = #{record.isAdmin,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mkstore.mk.model.MkPlatformRole" >
+    update mk_platform_role
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDescribe != null" >
+        role_describe = #{roleDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="roleStatus != null" >
+        role_status = #{roleStatus,jdbcType=CHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin,jdbcType=CHAR},
+      </if>
+    </set>
+    where platform_role_id = #{platformRoleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mkstore.mk.model.MkPlatformRole" >
+    update mk_platform_role
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      role_describe = #{roleDescribe,jdbcType=VARCHAR},
+      role_status = #{roleStatus,jdbcType=CHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      is_admin = #{isAdmin,jdbcType=CHAR}
+    where platform_role_id = #{platformRoleId,jdbcType=INTEGER}
+  </update>
+</mapper>
