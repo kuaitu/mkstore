@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+    xmlns:tx="http://www.springframework.org/schema/tx"   
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx   
+        http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+        http://www.springframework.org/schema/aop   
+        http://www.springframework.org/schema/aop/spring-aop-4.1.xsd ">
+
+
+
+	<context:component-scan base-package="com.mkstore.*" />
+	<context:component-scan base-package="com.mkstore.*.*" />
+	
+	
+	<!-- 数据库placeholder -->
+	<context:property-placeholder location="classpath:*.properties" />
+	<resources mapping="/resources/**" location="/resources/" />
+	
+	<!-- 配置连接池 -->  
+    <beans:bean id="masterDataSource" class="com.jolbox.bonecp.BoneCPDataSource"  
+        destroy-method="close">  
+        <!-- 数据库驱动 -->  
+        <beans:property name="driverClass" value="${jdbc.master.driver}" />  
+        <!-- 相应驱动的jdbcUrl -->  
+        <beans:property name="jdbcUrl" value="${jdbc.master.url}" />  
+        <!-- 数据库的用户名 -->  
+        <beans:property name="username" value="${jdbc.master.username}" />  
+        <!-- 数据库的密码 -->  
+        <beans:property name="password" value="${jdbc.master.password}" />  
+        <!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->  
+        <beans:property name="idleConnectionTestPeriod" value="60" />  
+        <!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->  
+        <beans:property name="idleMaxAge" value="30" />  
+        <!-- 每个分区最大的连接数 -->  
+        <beans:property name="maxConnectionsPerPartition" value="150" />  
+        <!-- 每个分区最小的连接数 -->  
+        <beans:property name="minConnectionsPerPartition" value="5" />  
+    </beans:bean>  
+      
+    <!-- 配置连接池 -->  
+    <beans:bean id="slave01DataSource" class="com.jolbox.bonecp.BoneCPDataSource"  
+        destroy-method="close">  
+        <!-- 数据库驱动 -->  
+        <beans:property name="driverClass" value="${jdbc.slave01.driver}" />  
+        <!-- 相应驱动的jdbcUrl -->  
+        <beans:property name="jdbcUrl" value="${jdbc.slave01.url}" />  
+        <!-- 数据库的用户名 -->  
+        <beans:property name="username" value="${jdbc.slave01.username}" />  
+        <!-- 数据库的密码 -->  
+        <beans:property name="password" value="${jdbc.slave01.password}" />  
+        <!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->  
+        <beans:property name="idleConnectionTestPeriod" value="60" />  
+        <!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->  
+        <beans:property name="idleMaxAge" value="30" />  
+        <!-- 每个分区最大的连接数 -->  
+        <beans:property name="maxConnectionsPerPartition" value="150" />  
+        <!-- 每个分区最小的连接数 -->  
+        <beans:property name="minConnectionsPerPartition" value="5" />  
+    </beans:bean>
+    
+    <!-- 定义数据源，使用自己实现的数据源 -->  
+    <beans:bean id="dataSource" class="com.mkstore.mk.DataSourceUtils.DynamicDataSource">  
+        <!-- 设置多个数据源 -->  
+        <beans:property name="targetDataSources">  
+            <beans:map key-type="java.lang.String">  
+                <!-- 这个key需要和程序中的key一致 -->  
+                <beans:entry key="master" value-ref="masterDataSource"/>  
+                <beans:entry key="slave" value-ref="slave01DataSource"/>  
+            </beans:map>  
+        </beans:property>  
+        <!-- 设置默认的数据源，这里默认走写库 -->  
+        <beans:property name="defaultTargetDataSource" ref="masterDataSource"/>  
+    </beans:bean>
+    
+    <!-- 定义事务管理器 -->  
+    <beans:bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <beans:property name="dataSource" ref="dataSource" />  
+    </beans:bean> 
+	
+	<!-- 定义事务策略 -->  
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">  
+        <tx:attributes>  
+            <!--定义查询方法都是只读的 -->  
+            <tx:method name="search*" read-only="true" />  
+            <tx:method name="find*" read-only="true" />  
+            <tx:method name="get*" read-only="true" />  
+  
+            <!-- 主库执行操作，事务传播行为定义为默认行为 -->  
+            <tx:method name="save*" propagation="REQUIRED" />  
+            <tx:method name="update*" propagation="REQUIRED" />  
+            <tx:method name="delete*" propagation="REQUIRED" />  
+  
+            <!--其他方法使用默认事务策略 -->  
+            <tx:method name="*" />  
+        </tx:attributes>  
+    </tx:advice>
+    
+    <!-- 定义AOP切面处理器 -->  
+    <beans:bean id="dataSourceAspect" class="com.mkstore.mk.DataSourceUtils.DataSourceAspect" />  
+  
+    <aop:config>  
+        <!-- 定义切面，所有的service的所有方法 -->  
+        <aop:pointcut id="txPointcut" expression="execution(* com.mkstore.mk.service.*.*(..))" />  
+        <!-- 应用事务策略到Service切面 -->  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>  
+          
+        <!-- 将切面应用到自定义的切面处理器上，-9999保证该切面优先级最高执行 -->  
+        <aop:aspect ref="dataSourceAspect" order="-9999">  
+            <aop:before method="before" pointcut-ref="txPointcut" />  
+        </aop:aspect>  
+    </aop:config>  
+
+	<!-- 配置sqlSessionFactory -->
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="configLocation"
+			value="classpath:mybatis-config.xml" />
+		<beans:property name="mapperLocations"
+			value="classpath:com/mkstore/**/mapper/*.xml" />
+	</beans:bean>
+
+	<!-- mybatis接口文件 -->
+	<beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<beans:property name="basePackage" value="com.mkstore.mk.dao" />
+		<beans:property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</beans:bean>
+
+   	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="defaultEncoding" value="UTF-8"/>
+		 <!-- 暂时先指定所上传文件的总大小不能超过6GB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->  
+		<beans:property name="maxUploadSize" value="6144000000"/>
+	</beans:bean>
+
+    
+	<beans:bean id="exceptionHandler" class="com.bs.extender.GlobalExceptionHandler"/>
+	
+	
+	<!-- redis集群配置
+	<beans:bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<beans:property name="maxTotal" value="100" />
+		<beans:property name="maxIdle" value="10" />
+	</beans:bean>
+
+	<beans:bean id="jedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		destroy-method="destroy">
+		<beans:property name="hostName" value="${redis.host}" />
+		<beans:property name="port" value="${redis.port}" />
+		<beans:property name="timeout" value="3000" />
+		<beans:property name="usePool" value="true" />
+		<beans:property name="poolConfig" ref="jedisPoolConfig" />
+	</beans:bean>
+	<beans:bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">   
+        <beans:property name="connectionFactory"   ref="jedisConnectionFactory" />   
+        <beans:property name="keySerializer">   
+            <beans:bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />   
+        </beans:property>      
+        <beans:property name="valueSerializer">   
+            <beans:bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />   
+        </beans:property>   
+        <beans:property name="hashKeySerializer">     
+           <beans:bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>     
+        </beans:property>   
+        <beans:property name="hashValueSerializer">   
+           <beans:bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>     
+        </beans:property> 
+     </beans:bean> 
+      -->
+</beans:beans>
